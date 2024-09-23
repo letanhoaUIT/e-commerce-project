@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    @apply font-sans
+}
+
+:root {
+    --lgcontainer: 1430px;
+}
+
+.container {
+    max-width: var(--lgcontainer);
+    text-align: center;
+}
+
+.container2 {
+    max-width: var(--lgcontainer);
+}
