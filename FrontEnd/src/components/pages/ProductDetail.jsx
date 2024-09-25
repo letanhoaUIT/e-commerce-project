@@ -18,6 +18,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
+  const [image, setImage] = useState([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -33,6 +34,10 @@ const ProductDetail = () => {
             setSelectedSize(product.variants[0].sizes[0]);
           }
         }
+
+        //Fetch image from product
+        const imagesResponse = await Axios.get(`/products/${id}`);
+        setImage(imagesResponse.data);
 
         // Fetch comments for the product
         const commentsResponse = await Axios.get(`/products/${id}/comments`);
@@ -121,18 +126,13 @@ const ProductDetail = () => {
     <div className="product-detail p-4 mx-auto max-w-screen-lg flex">
       {/* Left Side: Image and Toast */}
       <div className="w-2/3">
-        {selectedVariant && selectedVariant.images.length > 0 && (
-          <Slider {...settings}>
-            {selectedVariant.images.map((image, index) => (
-              <div key={index} className="p-2">
-                <img
-                  src={image.url}
-                  alt={`Product Image ${index + 1}`}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            ))}
-          </Slider>
+        {/* Hiển thị hình ảnh sản phẩm */}
+        {image.image_url && (
+          <img
+            src={image.image_url}
+            alt={image.name}
+            className="w-2/3 h-auto object-cover"
+          />
         )}
         <ToastContainer />
       </div>

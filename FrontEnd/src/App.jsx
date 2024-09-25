@@ -25,6 +25,8 @@ import Profile from "./components/pages/Profile.jsx";
 import StatisticsChart from "./components/pages/admin/Chart.jsx";
 import AdminRoute from "./contexts/AdminRoute";
 import CategoryManager from "./components/pages/admin/CategoriesManager.jsx";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 function App() {
   return (

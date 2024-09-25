@@ -57,13 +57,20 @@ class ProductController extends Controller
     // Get a single product
     public function show($id)
     {
+        // Lấy sản phẩm theo ID
         $product = Product::find($id);
+
+        // Kiểm tra xem sản phẩm có tồn tại không
         if ($product) {
+            // Thêm URL đầy đủ cho trường image
+            $product->image_url = asset($product->image);
+
             return response()->json($product);
         } else {
             return response()->json(['message' => 'Product not found'], 404);
         }
     }
+
 
     // Create a new product
     public function store(Request $request)

@@ -106,3 +106,4 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
 // api.php
 Route::get('orders', [OrderController::class, 'index']);
+Route::get('products/{id}', [ProductController::class, 'show']);
