@@ -115,7 +115,7 @@ class CartItemController extends Controller
 
         $cartItemsWithImages = $cartItems->map(function ($item) {
             $imageUrls = $item->variant->images->map(function ($image) {
-                return $image->url;
+                return config('filesystems.disks.public.url') . $image->url;
             });
 
             return [

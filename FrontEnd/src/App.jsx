@@ -124,7 +124,6 @@ function App() {
                 />
               </Route>
             </Routes>
-            <Footer />
           </div>
           
         </div>

@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
             CreateAdminSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
-            UpdateProductImagesSeeder::class,
             VariantSeeder::class,
             SizeSeeder::class,
             ProductVariantSizeSeeder::class,

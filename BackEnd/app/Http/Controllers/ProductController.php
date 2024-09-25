@@ -312,14 +312,12 @@ class ProductController extends Controller
         if ($request->hasFile("variants.$variantIndex.new_images")) {
             foreach ($request->file("variants.$variantIndex.new_images") as $image) {
                 $path = $image->store('images', 'public');
+                $storagePath = Storage::url($path);
                 $img = Image::create([
                     'variant_id' => $variant->id,
-                    'url' => $path,
+                    'url' => $storagePath,
                 ]);
-                ImagesVariant::create([
-                    'variant_id' => $variant->id,
-                    'image_id' => $img->id,
-                ]);
+                $variant->images()->attach($img->id);
             }
         }
     }
