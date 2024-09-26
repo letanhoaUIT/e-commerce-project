@@ -10,6 +10,32 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const PrevArrow = (props) => {
+  const { className, onClick } = props;
+  return (
+    <div
+      className={` custom-arrow prev-arrow text-4xl text-black`}
+      onClick={onClick}
+      style={{ position: "absolute", top: "40%", left: "10px", transform: "translateY(-50%)", zIndex: 1, cursor: "pointer" }}
+    >
+      ‹
+    </div>
+  );
+};
+
+const NextArrow = (props) => {
+  const { className, onClick } = props;
+  return (
+    <div
+      className={`custom-arrow next-arrow text-4xl text-black`}
+      onClick={onClick}
+      style={{ position: "absolute", top: "40%", right: "36%", transform: "translateY(-50%)", zIndex: 1, cursor: "pointer" }}
+    >
+      ›
+    </div>
+  );
+};
+
 const ProductDetail = () => {
   const { id } = useParams();
   const [productData, setProductData] = useState(null);
@@ -35,7 +61,7 @@ const ProductDetail = () => {
           }
         }
 
-        //Fetch image from product
+        // Fetch image from product
         const imagesResponse = await Axios.get(`/products/${id}`);
         setImage(imagesResponse.data);
 
@@ -115,25 +141,33 @@ const ProductDetail = () => {
   };
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,          
+    autoplaySpeed: 3000, 
+    nextArrow: <NextArrow />, // Custom arrow for next
+    prevArrow: <PrevArrow />, // Custom arrow for prev
   };
 
   return (
     <div className="product-detail p-4 mx-auto max-w-screen-lg flex">
       {/* Left Side: Image and Toast */}
       <div className="w-2/3">
-        {/* Hiển thị hình ảnh sản phẩm */}
-        {image.image_url && (
-          <img
-            src={image.image_url}
-            alt={image.name}
-            className="w-2/3 h-auto object-cover"
-          />
-        )}
+        {/* Sử dụng Slider để hiển thị ảnh */}
+        <Slider {...settings}>
+          {[...Array(3)].map((_, index) => (
+            <div key={index}>
+              <img
+                src={image.image_url}
+                alt={image.name}
+                className="w-2/3 h-auto object-cover"
+              />
+            </div>
+          ))}
+        </Slider>
         <ToastContainer />
       </div>
 
