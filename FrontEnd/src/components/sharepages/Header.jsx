@@ -60,7 +60,7 @@ const Header = () => {
           </div>
 
           <div className="logo text-center">
-            <Link to="/" className="site-logo-new">
+            <Link to="/products" className="site-logo-new">
               <div className="normal-logo">
                 <img
                   className="max-h-11"
@@ -115,7 +115,7 @@ const Header = () => {
 
             <div className="cartTop cartOuter relative">
               <Link to="/cart" className="relative">
-                <span className="cartCount absolute top-2.5 right-1.5 bg-red-500 text-white rounded-full text-xs w-3 h-3 flex items-center justify-center">3</span>
+                <span className="cartCount absolute top-2.5 right-1.5 text-red rounded-full text-xs w-3 h-3 flex items-center justify-center">HI</span>
                 <svg
                   alt="Cart"
                   aria-label="cart"

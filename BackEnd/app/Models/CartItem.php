@@ -37,4 +37,5 @@ class CartItem extends Model
     {
         return $this->hasManyThrough(Image::class, ImagesVariant::class, 'id', 'id', 'variant_id', 'product_variant_size_id');
     }
+    
 }

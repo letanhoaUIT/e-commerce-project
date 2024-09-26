@@ -50,7 +50,7 @@ function App() {
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/profile/*" element={<Profile />} />
               <Route path="/myorder/:id" element={<MyOrder />} />
-              <Route path="/order-history" element={<OrderHistory />} />
+
               {/* Bảo vệ các trang quản trị */}
               <Route path="/admin">
                 <Route

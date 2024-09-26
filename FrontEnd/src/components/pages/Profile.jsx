@@ -5,11 +5,15 @@ import MyOrders from './MyOrders';
 import MyAddressBook from './MyAddressBook';
 import EditProfile from './EditProfile';
 import { useAuth } from '../../contexts/AuthContext';
-import { Navigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from "react-router-dom"; // Thêm useNavigate
 
 const Profile = () => {
     const { user } = useAuth();
-    
+    const navigate = useNavigate();
+
+    const handleNavigate = () => {
+        navigate(`/myorder/${user.id}`);
+    };
     if (!user) {
         return <Navigate to="/login" />;
     }
@@ -26,7 +30,8 @@ const Profile = () => {
                         <Link to="my-address-book" className="">My Address Book</Link>
                     </li>
                     <li className="mb-2">
-                        <Link to="my-orders" className="">My Orders</Link>
+                        {/* <Link to="/myorder/${user.id}" className="">My Orders</Link> */}
+                        <button onClick={handleNavigate}>My Orders</button>
                     </li>
                     <li className="mb-2">
                         <Link to="/logout" className="text-red-400">Logout</Link>

@@ -9,7 +9,7 @@ import Loading from "../sharepages/Loading";
 const CartItem = ({ item, onRemove, onIncrease, onDecrease, onSelect, selected }) => {
   const variant = item.variant;
   const size = item.size;
-
+  // const imageUrl = item.product.imageUrl;
   return (
     <div className="flex items-center justify-between border-b py-4">
       <input
@@ -22,8 +22,8 @@ const CartItem = ({ item, onRemove, onIncrease, onDecrease, onSelect, selected }
         to={`/product/${variant.product_id}`}
         className="flex items-center flex-grow"
       >
-        <img
-          src={item.image}
+          <img
+          src="https://www.stevemadden.com/cdn/shop/files/SM_logo_SansSerif-01.png"
           alt={variant.name}
           className="ml-4 w-16 h-16 object-cover"
         />

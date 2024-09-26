@@ -115,8 +115,8 @@ class CartItemController extends Controller
         ->get();
 
     $cartItemsWithImages = $cartItems->map(function ($item) {
-        // Get the product image URL directly from the product relationship
-        $imageUrl = $item->variant->product->image; // Assuming 'image' is the field in the products table
+            // Get the product image URL directly from the product relationship
+            $imageUrl = isset($item->variant->product->image) ? $item->variant->product->image : null;
         
         return [
             'id' => $item->id,

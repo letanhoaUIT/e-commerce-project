@@ -9,18 +9,17 @@ import { useLocation, useNavigate } from "react-router-dom"; // Thêm useNavigat
 const OrderItem = ({ item }) => {
   const variant = item.variant;
   const size = item.size;
-  const imageUrl = variant && variant.images && variant.images.length > 0 ? variant.images[0].url : "";
 
   return (
     <div className="flex items-center justify-between border-b py-4">
       <div className="flex items-center space-x-4">
         <img
-          src={imageUrl}
+          src="https://www.stevemadden.com/cdn/shop/files/SM_logo_SansSerif-01.png"
           alt={variant.name}
           className="w-20 h-20 rounded-lg object-cover shadow-sm"
         />
         <div className="flex-1">
-          <h2 className="text-lg font-semibold">{variant.name}</h2>
+          <h2 className="text-lg font-semibold">{item.product.name}</h2>
           <p className="text-sm text-gray-500">Size: {size.name}</p>
           <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
         </div>
