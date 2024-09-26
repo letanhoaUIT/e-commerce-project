@@ -6,6 +6,7 @@ function ProductList() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [cachedProducts, setCachedProducts] = useState([]);
 
     const query = new URLSearchParams(useLocation().search);
     const search = query.get('search') || '';
@@ -65,7 +66,7 @@ function ProductList() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {products.map(product => (
                     <Link to={`/product/${product.id}`} key={product.id} className="p-2 rounded flex flex-col">
-                        <img src={product.image_url} alt={product.name} className="w-full object-cover mb-4 cursor-pointer" />
+                        <img src={product.image_url} alt={product.name} className="w-full object-cover mb-4 cursor-pointer" loading="lazy" />
                         <div className="w-full flex justify-between items-center cursor-pointer">
                             <div className="flex flex-col">
                                 <p className="text-sm text-gray-500">MEN'S SHOES</p>

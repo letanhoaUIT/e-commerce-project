@@ -71,9 +71,12 @@ const Order = () => {
 
     try {
       setLoading(true);
+      // Tạo đơn hàng trước
       const response = await Axios.post("/orders", orderData);
       const newOrderId = response.data.id;
-      setOrderId(newOrderId);
+
+      // Hiển thị thông báo thành công ngay sau khi tạo đơn hàng
+      toast.success("Order placed successfully!");
 
       const orderItemsData = selectedItems.map((item) => ({
         order_id: newOrderId,
@@ -82,19 +85,18 @@ const Order = () => {
         price: item.product.price,
       }));
 
-      for (const orderItem of orderItemsData) {
-        try {
-          await Axios.post("/order-items", orderItem);
-        } catch (error) {
+      // Gửi tất cả các yêu cầu đồng thời nhưng không chờ phản hồi
+      Promise.all(orderItemsData.map(orderItem =>
+        Axios.post("/order-items", orderItem).catch(error => {
           console.error("Error placing order item:", error);
           toast.error("Error placing order item");
-        }
-      }
+        })
+      ));
 
-      await Axios.post('/send-order-confirmation', { order_id: newOrderId, email: user.email });
+      // Gửi email xác nhận nhưng không chờ
+      Axios.post('/send-order-confirmation', { order_id: newOrderId, email: user.email });
 
-      toast.success("Order placed successfully!");
-      setSelectedItems([]); // Clear the selected items after successful order placement
+      setSelectedItems([]); // Xóa các mục đã chọn sau khi đặt hàng thành công
     } catch (error) {
       console.error("Error placing order:", error);
       toast.error("Error placing order");
@@ -102,6 +104,7 @@ const Order = () => {
       setLoading(false);
     }
   };
+
 
   const handleViewOrders = () => {
     setSelectedItems([]); // Clear selected items before navigating
