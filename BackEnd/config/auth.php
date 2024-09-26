@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+            'api' => [
+            'driver' => 'token', // hoặc 'passport' nếu bạn đang dùng Passport
+            'provider' => 'users',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -64,7 +69,10 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-
+        // 'api' => [
+        //     'driver' => 'token', // Hoặc 'passport' nếu bạn đang sử dụng Passport
+        //     'provider' => 'users',
+        // ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

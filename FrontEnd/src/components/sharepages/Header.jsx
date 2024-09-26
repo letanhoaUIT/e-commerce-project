@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import PopupHeader from './PopupHeader';
+import Axios from "../../constants/Axios";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  // const [cartCount, setCartCount] = useState(0);
 
   const handleSearch = (event) => {
     event.preventDefault();
     navigate(`/products?search=${searchQuery}`);
   };
-
 
   return (
     <header id="main-header">
@@ -114,7 +115,7 @@ const Header = () => {
 
             <div className="cartTop cartOuter relative">
               <Link to="/cart" className="relative">
-                <span className="cartCount absolute top-0 right-0 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">0</span>
+                <span className="cartCount absolute top-2.5 right-1.5 bg-red-500 text-white rounded-full text-xs w-3 h-3 flex items-center justify-center">3</span>
                 <svg
                   alt="Cart"
                   aria-label="cart"
@@ -129,8 +130,10 @@ const Header = () => {
                     clipRule="evenodd"
                     d="M24.5 24H0V76H80V24H56C55.3333 16 51.2707 0 41 0C29 0 25.5 16.5 24.5 24ZM4 28V72H76V28H4ZM52 24H29C30.1667 16.5 34.5 4 41 4C46.5 4 51 16 52 24Z"
                     fill="black"
+                    // fill="#FFD700"
                   ></path>
                 </svg>
+                
               </Link>
             </div>
           </div>

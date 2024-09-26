@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom"; // Thêm useNavigat
 const OrderItem = ({ item }) => {
   const variant = item.variant;
   const size = item.size;
-  const imageUrl = variant.images.length > 0 ? variant.images[0].url : "";
+  const imageUrl = variant && variant.images && variant.images.length > 0 ? variant.images[0].url : "";
 
   return (
     <div className="flex items-center justify-between border-b py-4">
@@ -27,10 +27,10 @@ const OrderItem = ({ item }) => {
       </div>
       <div className="text-right">
         <p className="text-lg font-semibold text-black">
-          ${item.product_variant_size.price.toFixed(2)} x {item.quantity}
+          ${item.product.price.toFixed(2)} x {item.quantity}
         </p>
         <p className="text-xl font-bold text-green-600">
-          = ${(item.product_variant_size.price * item.quantity).toFixed(2)}
+          = ${(item.product.price * item.quantity).toFixed(2)}
         </p>
       </div>
     </div>
@@ -42,14 +42,18 @@ const Order = () => {
   const [orderId, setOrderId] = useState(null);
   const { user } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate(); // Khai báo useNavigate
-  const selectedItems = location.state?.selectedItems || [];
+  const navigate = useNavigate();
+  const [selectedItems, setSelectedItems] = useState([]); // Initialize as empty
 
   useEffect(() => {
-    if (selectedItems.length === 0) {
+    // Reset selected items from location state when the component mounts
+    const items = location.state?.selectedItems || [];
+    setSelectedItems(items);
+
+    if (items.length === 0) {
       toast.error("No items selected for checkout.");
     }
-  }, [selectedItems]);
+  }, [location.state]);
 
   const handlePlaceOrder = async () => {
     if (!user) {
@@ -61,7 +65,7 @@ const Order = () => {
       user_id: user.id,
       status: "pending",
       total_price: selectedItems.reduce(
-        (acc, item) => acc + item.product_variant_size.price * item.quantity,
+        (acc, item) => acc + item.product.price * item.quantity,
         0
       ),
     };
@@ -76,7 +80,7 @@ const Order = () => {
         order_id: newOrderId,
         product_variant_size_id: item.product_variant_size.id,
         quantity: item.quantity,
-        price: item.product_variant_size.price,
+        price: item.product.price,
       }));
 
       for (const orderItem of orderItemsData) {
@@ -91,6 +95,7 @@ const Order = () => {
       await Axios.post('/send-order-confirmation', { order_id: newOrderId, email: user.email });
 
       toast.success("Order placed successfully!");
+      setSelectedItems([]); // Clear the selected items after successful order placement
     } catch (error) {
       console.error("Error placing order:", error);
       toast.error("Error placing order");
@@ -100,13 +105,14 @@ const Order = () => {
   };
 
   const handleViewOrders = () => {
+    setSelectedItems([]); // Clear selected items before navigating
     if (user) {
-      navigate(`/myorder/${user.id}`); // Điều hướng đến trang MyOrders
+      navigate(`/myorder/${user.id}`); // Navigate to MyOrders
     }
   };
 
   const total = selectedItems.reduce(
-    (acc, item) => acc + item.product_variant_size.price * item.quantity,
+    (acc, item) => acc + item.product.price * item.quantity,
     0
   );
 
@@ -114,9 +120,13 @@ const Order = () => {
     <div className="max-w-5xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Review Your Order</h1>
       <div className="border rounded-lg p-6 bg-white shadow-md mb-6">
-        {selectedItems.map((item) => (
-          <OrderItem key={item.id} item={item} />
-        ))}
+        {selectedItems.length === 0 ? (
+          <p className="text-center text-red-500">No items to display. Your order has been placed.</p>
+        ) : (
+          selectedItems.map((item) => (
+            <OrderItem key={item.id} item={item} />
+          ))
+        )}
       </div>
       <div className="flex justify-end">
         <div className="w-full lg:w-1/3 border rounded-lg p-6 bg-gray-50 shadow-md">
@@ -126,6 +136,7 @@ const Order = () => {
           <button
             onClick={handlePlaceOrder}
             className="w-full bg-black text-white py-3 mt-6 font-bold hover:bg-gray-800 transition-colors duration-200"
+            disabled={selectedItems.length === 0} // Disable if no items
           >
             PLACE ORDER
           </button>

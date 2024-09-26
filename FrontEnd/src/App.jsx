@@ -27,6 +27,7 @@ import AdminRoute from "./contexts/AdminRoute";
 import CategoryManager from "./components/pages/admin/CategoriesManager.jsx";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import OrderHistory from "./components/pages/OrderHistory.jsx";
 
 function App() {
   return (
@@ -49,7 +50,7 @@ function App() {
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/profile/*" element={<Profile />} />
               <Route path="/myorder/:id" element={<MyOrder />} />
-              
+              <Route path="/order-history" element={<OrderHistory />} />
               {/* Bảo vệ các trang quản trị */}
               <Route path="/admin">
                 <Route

@@ -20,20 +20,20 @@ const CartItem = ({ item, onRemove, onIncrease, onDecrease, onSelect, selected }
       />
       <Link
         to={`/product/${variant.product_id}`}
-        className="flex items-center"
+        className="flex items-center flex-grow"
       >
         <img
-          src={item.product.image}
+          src={item.image}
           alt={variant.name}
-          className="w-16 h-16 object-cover"
+          className="ml-4 w-16 h-16 object-cover"
         />
         <div className="flex-1 ml-4">
           <h2 className="text-lg font-bold">{item.product.name}</h2>
-          <p>Variant: {variant.name}</p>
-          <p>Size: {size.name}</p>
+          <p className="text-sm text-gray-600">Variant: {variant.name}</p>
+          <p className="text-sm text-gray-600">Size: {size.name}</p>
         </div>
       </Link>
-      <div className="flex items-center">
+      <div className="flex items-center justify-center">
         <button
           onClick={() => onDecrease(item.id)}
           className="bg-black text-white px-2 py-1"
@@ -56,10 +56,11 @@ const CartItem = ({ item, onRemove, onIncrease, onDecrease, onSelect, selected }
           🗑️
         </button>
       </div>
-      <p className="ml-4">${item.product_variant_size.price.toFixed(2)}</p>
+      <p className="ml-16 text-lg font-semibold">${item.product.price.toFixed(2)}</p>
     </div>
   );
 };
+
 
 CartItem.propTypes = {
   item: PropTypes.shape({
@@ -88,6 +89,8 @@ const Cart = () => {
         const response = await Axios.get("/cart-items");
         setItems(response.data);
         setLoading(false);
+
+        
       } catch (error) {
         console.error("Error fetching cart items:", error);
         setLoading(false);
@@ -178,7 +181,7 @@ const Cart = () => {
   const total = items.reduce(
     (acc, item) =>
       selectedItems.includes(item.id)
-        ? acc + item.product_variant_size.price * item.quantity
+        ? acc + item.product.price * item.quantity
         : acc,
     0
   );

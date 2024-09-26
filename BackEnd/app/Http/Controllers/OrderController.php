@@ -10,8 +10,6 @@ use App\Mail\OrderConfirmationMail;
 
 class OrderController extends Controller
 {
-    // Get all orders
-    // Get all orders
 // OrderController.php
 public function index(Request $request)
 {

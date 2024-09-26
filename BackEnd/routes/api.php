@@ -12,8 +12,6 @@ use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\VariantController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
-use App\Mail\OrderConfirmationMail;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\StatisticsController;
 
 // Lấy thông tin user hiện tại sau khi đã xác thực
@@ -107,3 +105,7 @@ Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 // api.php
 Route::get('orders', [OrderController::class, 'index']);
 Route::get('products/{id}', [ProductController::class, 'show']);
+// Route::get('cart/item-count', [CartItemController::class, 'getCartItemCount']);
+// Route::middleware('auth:api')->get('cart/item-count', [CartItemController::class, 'getCartItemCount']);
+// Route::middleware('auth:sanctum')->get('/cart-items/current', [CartController::class, 'getCartForCurrentUser']);
+Route::get('/cart-items', [CartItemController::class, 'get_cart_items']);

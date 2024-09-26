@@ -6,8 +6,7 @@ use App\Models\CartItem;
 use App\Models\Cart;
 use App\Models\ProductVariantSize;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CartItemController extends Controller
 {
@@ -105,32 +104,34 @@ class CartItemController extends Controller
         return response()->json($cartItem, 201);
     }
 
-    public function get_cart_items()
-    {
-        $userId = 1;
-        $cartId = Cart::where('user_id', $userId)->first()->id;
-        $cartItems = CartItem::with(['productVariantSize', 'variant.images', 'size'])
+   public function get_cart_items()
+{
+    $userId = 1;
+    $cartId = Cart::where('user_id', $userId)->first()->id;
+    
+    // Eager load the necessary relationships
+    $cartItems = CartItem::with(['productVariantSize', 'variant.product', 'size'])
         ->where('cart_id', $cartId)
         ->get();
 
-        $cartItemsWithImages = $cartItems->map(function ($item) {
-            $imageUrls = $item->variant->images->map(function ($image) {
-                return config('filesystems.disks.public.url') . $image->url;
-            });
+    $cartItemsWithImages = $cartItems->map(function ($item) {
+        // Get the product image URL directly from the product relationship
+        $imageUrl = $item->variant->product->image; // Assuming 'image' is the field in the products table
+        
+        return [
+            'id' => $item->id,
+            'variant' => $item->variant,
+            'size' => $item->size,
+            'quantity' => $item->quantity,
+            'product_variant_size' => $item->productVariantSize,
+            'image' => config('filesystems.disks.public.url') . $imageUrl, // Build the full URL
+            'product' => $item->variant->product,
+        ];
+    });
 
-            return [
-                'id' => $item->id,
-                'variant' => $item->variant,
-                'size' => $item->size,
-                'quantity' => $item->quantity,
-                'product_variant_size' => $item->productVariantSize,
-                'images' => $imageUrls,
-                'product' => $item->variant->product,
-            ];
-        });
+    return response()->json($cartItemsWithImages);
+}
 
-        return response()->json($cartItemsWithImages);
-    }
 
 
     public function increaseQuantity($id)
@@ -161,5 +162,7 @@ class CartItemController extends Controller
             return response()->json(['message' => 'Cart item not found'], 404);
         }
     }
+
+
 
 }

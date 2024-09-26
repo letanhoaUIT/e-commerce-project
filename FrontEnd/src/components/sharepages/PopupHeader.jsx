@@ -89,7 +89,7 @@ const PopupHeader = () => {
               <h3 className="font-bold mb-2">Men&apos;s</h3>
               <ul>
                 <li><a href="/abc" className="hover:underline">Shop All</a></li>
-                <li><a href="/abc" className="hover:underline">Men&apos;s Shoes</a></li>
+                <li><a href="/products" className="hover:underline">Men&apos;s Shoes</a></li>
                 <li><a href="/abc" className="hover:underline">Men&apos;s Clothing</a></li>
               </ul>
             </div>
