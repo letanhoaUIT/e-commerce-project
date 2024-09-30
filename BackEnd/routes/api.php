@@ -112,3 +112,7 @@ Route::get('products/{id}', [ProductController::class, 'show']);
 // Route::middleware('auth:api')->get('cart/item-count', [CartItemController::class, 'getCartItemCount']);
 // Route::middleware('auth:sanctum')->get('/cart-items/current', [CartController::class, 'getCartForCurrentUser']);
 Route::get('/cart-items', [CartItemController::class, 'get_cart_items']);
+
+
+//Thanh Toan
+Route::post('/vnpay_payment', [OrderController::class, 'vnpay_payment']);
