@@ -43,9 +43,12 @@ const Order = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState([]); // Initialize as empty
+  const [coupon, setCoupon] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [shippingAddress, setShippingAddress] = useState("Your default address here"); // Placeholder for the address
 
   useEffect(() => {
-    // Reset selected items from location state when the component mounts
     const items = location.state?.selectedItems || [];
     setSelectedItems(items);
 
@@ -65,17 +68,17 @@ const Order = () => {
       status: "pending",
       total_price: selectedItems.reduce(
         (acc, item) => acc + item.product.price * item.quantity,
-        0
+        0 - discount // Apply discount here
       ),
+      shipping_address: shippingAddress,
+      payment_method: paymentMethod,
     };
 
     try {
       setLoading(true);
-      // Tạo đơn hàng trước
       const response = await Axios.post("/orders", orderData);
       const newOrderId = response.data.id;
 
-      // Hiển thị thông báo thành công ngay sau khi tạo đơn hàng
       toast.success("Order placed successfully!");
 
       const orderItemsData = selectedItems.map((item) => ({
@@ -85,7 +88,6 @@ const Order = () => {
         price: item.product.price,
       }));
 
-      // Gửi tất cả các yêu cầu đồng thời nhưng không chờ phản hồi
       Promise.all(orderItemsData.map(orderItem =>
         Axios.post("/order-items", orderItem).catch(error => {
           console.error("Error placing order item:", error);
@@ -93,10 +95,9 @@ const Order = () => {
         })
       ));
 
-      // Gửi email xác nhận nhưng không chờ
       Axios.post('/send-order-confirmation', { order_id: newOrderId, email: user.email });
 
-      setSelectedItems([]); // Xóa các mục đã chọn sau khi đặt hàng thành công
+      setSelectedItems([]);
     } catch (error) {
       console.error("Error placing order:", error);
       toast.error("Error placing order");
@@ -105,17 +106,31 @@ const Order = () => {
     }
   };
 
+  const handleApplyCoupon = () => {
+    if (coupon.trim() === "") {
+      toast.error("Please enter a coupon code.");
+      return;
+    }
+
+    // Simulating coupon application logic
+    if (coupon === "SAVE10") {
+      setDiscount(10);
+      toast.success("Coupon applied successfully!");
+    } else {
+      toast.error("Invalid coupon code.");
+    }
+  };
 
   const handleViewOrders = () => {
-    setSelectedItems([]); // Clear selected items before navigating
+    setSelectedItems([]);
     if (user) {
-      navigate(`/myorder/${user.id}`); // Navigate to MyOrders
+      navigate(`/myorder/${user.id}`);
     }
   };
 
   const total = selectedItems.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
-    0
+    0 - discount // Subtract discount from total
   );
 
   return (
@@ -130,6 +145,73 @@ const Order = () => {
           ))
         )}
       </div>
+
+      {/* Coupon/Voucher Section */}
+      <div className="border rounded-lg p-6 bg-gray-50 mb-6">
+        <h2 className="text-xl font-semibold mb-2">Apply Coupon/Voucher</h2>
+        <div className="flex">
+          <input
+            type="text"
+            value={coupon}
+            onChange={(e) => setCoupon(e.target.value)}
+            placeholder="Enter coupon code"
+            className="border p-2 flex-grow mr-2"
+          />
+          <button
+            onClick={handleApplyCoupon}
+            className="bg-blue-500 text-white px-4 py-2"
+          >
+            Apply
+          </button>
+        </div>
+        {discount > 0 && <p className="mt-2 text-green-600">Discount applied: ${discount.toFixed(2)}</p>}
+      </div>
+
+      {/* Payment Method Selection */}
+      <div className="border rounded-lg p-6 bg-gray-50 mb-6">
+        <h2 className="text-xl font-semibold mb-2">Payment Method</h2>
+        <div className="flex flex-col">
+          <label className="flex items-center mb-2">
+            <input
+              type="radio"
+              value="cash"
+              checked={paymentMethod === "cash"}
+              onChange={() => setPaymentMethod("cash")}
+              className="mr-2"
+            />
+            Thanh toán tiền mặt
+          </label>
+          <label className="flex items-center mb-2">
+            <input
+              type="radio"
+              value="bank"
+              checked={paymentMethod === "bank"}
+              onChange={() => setPaymentMethod("bank")}
+              className="mr-2"
+            />
+            Quét mã ngân hàng
+          </label>
+          <label className="flex items-center">
+            <input
+              type="radio"
+              value="momo"
+              checked={paymentMethod === "momo"}
+              onChange={() => setPaymentMethod("momo")}
+              className="mr-2"
+            />
+            Quét mã Momo
+          </label>
+        </div>
+      </div>
+
+      {/* Shipping Address Display */}
+      <div className="border rounded-lg p-6 bg-gray-50 mb-6">
+        <h2 className="text-xl font-semibold mb-2">Shipping Address</h2>
+        <p>{shippingAddress}</p>
+        <p className="text-sm text-gray-500">If you want to change the address, please go to <a href="http://localhost:5173/profile/my-address-book" className="text-blue-500 underline">My Address Book</a></p>
+      </div>
+
+      {/* Total Summary */}
       <div className="flex justify-end">
         <div className="w-full lg:w-1/3 border rounded-lg p-6 bg-gray-50 shadow-md">
           <p className="text-2xl font-bold text-center">

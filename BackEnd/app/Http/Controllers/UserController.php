@@ -59,6 +59,7 @@ class UserController extends Controller
                 'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
                 'password' => 'sometimes|required|string|min:8',
                 'role' => 'sometimes|required|integer',
+                'address' => 'sometimes|required|string|max:255',
             ]);
 
             if (isset($validatedData['password'])) {

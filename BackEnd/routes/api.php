@@ -19,6 +19,9 @@ Route::get('/user', function (Request $request) {
   return $request->user();
 })->middleware('auth:sanctum');
 
+Route::put('/users/{id}', [UserController::class, 'update']);
+Route::get('/users/{id}', [UserController::class, 'show']);
+
 // Route để cập nhật email
 Route::put('/user/update-email', [UserController::class, 'updateEmail'])->middleware('auth:sanctum');
 
