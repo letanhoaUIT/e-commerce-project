@@ -84,7 +84,7 @@ To run this project, you need to have the following software installed:
     ```bash
     php artisan serve
     ```
-
+**Note: Remember to create database in RDBMS (MySQL...) and change name of DB_DATABASE in .env file
 ### 4.2 Frontend Installation (React)
 
 1. Navigate to the `FrontEnd` directory.
@@ -106,7 +106,6 @@ To run this project, you need to have the following software installed:
     **or**
     npm run dev
     ```
-
 
 ## 5. Usage
 
